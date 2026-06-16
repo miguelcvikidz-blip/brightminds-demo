@@ -359,6 +359,66 @@ body {
   .pg,.exarea{padding:12px;}
   .xpp{display:none;}
 }
+/* ── ANIMACIONES PREMIUM ── */
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+@keyframes scaleIn { from{opacity:0;transform:scale(.96);} to{opacity:1;transform:scale(1);} }
+@keyframes barGrow { from{transform:scaleX(0);} to{transform:scaleX(1);} }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+@keyframes drawLine { from{stroke-dashoffset:1000;} to{stroke-dashoffset:0;} }
+@keyframes dotBlink { 0%,80%,100%{opacity:.25;transform:scale(.8);} 40%{opacity:1;transform:scale(1);} }
+@keyframes radarGrow { from{transform:scale(0);opacity:0;} to{transform:scale(1);opacity:1;} }
+
+/* Entrada escalonada de las pantallas */
+.pg.anim > * { opacity:0; animation:fadeSlideUp .5s ease forwards; }
+.pg.anim > *:nth-child(1){animation-delay:.04s;}
+.pg.anim > *:nth-child(2){animation-delay:.10s;}
+.pg.anim > *:nth-child(3){animation-delay:.16s;}
+.pg.anim > *:nth-child(4){animation-delay:.22s;}
+.pg.anim > *:nth-child(5){animation-delay:.28s;}
+.pg.anim > *:nth-child(6){animation-delay:.34s;}
+
+/* KPIs entran con scale */
+.kpi { animation:scaleIn .45s ease backwards; }
+.g4 .kpi:nth-child(1){animation-delay:.05s;}
+.g4 .kpi:nth-child(2){animation-delay:.12s;}
+.g4 .kpi:nth-child(3){animation-delay:.19s;}
+.g4 .kpi:nth-child(4){animation-delay:.26s;}
+
+/* Barras de progreso animadas */
+.pf { transform-origin:left; animation:barGrow 1s cubic-bezier(.22,1,.36,1) backwards; animation-delay:.3s; }
+
+/* Sparkline con trazo animado */
+.ksp polyline:first-child { stroke-dasharray:200; animation:drawLine 1.4s ease forwards; }
+
+/* IA escribiendo — 3 puntos */
+.typing { display:inline-flex; gap:5px; align-items:center; padding:4px 0; }
+.typing span { width:9px; height:9px; border-radius:50%; background:var(--purple); animation:dotBlink 1.3s infinite; }
+.typing span:nth-child(2){animation-delay:.18s;}
+.typing span:nth-child(3){animation-delay:.36s;}
+
+/* Cursor parpadeante para texto que se escribe */
+.ai-cursor::after { content:'▋'; color:var(--purple); animation:dotBlink .9s infinite; margin-left:1px; }
+
+/* Campo de chat del copiloto */
+.ai-input-row { display:flex; gap:8px; margin-top:14px; }
+.ai-input { flex:1; padding:12px 16px; border:2px solid var(--g200); border-radius:12px; font-family:inherit; font-size:15px; outline:none; background:var(--g50); transition:border-color .2s; }
+.ai-input:focus { border-color:var(--purple); background:white; }
+.ai-send { background:linear-gradient(135deg,#7B1FA2,#AB47BC); color:white; border:none; border-radius:12px; padding:0 20px; font-weight:800; font-size:15px; cursor:pointer; font-family:inherit; transition:transform .15s; }
+.ai-send:active { transform:scale(.95); }
+.ai-suggest { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; }
+.ai-sug-chip { background:#EDE7F6; color:#6A1B9A; border:none; border-radius:20px; padding:6px 13px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:background .15s; }
+.ai-sug-chip:active { background:#D1C4E9; }
+
+/* Radar / pentágono SVG */
+.radar-poly { animation:radarGrow .8s cubic-bezier(.34,1.56,.64,1) forwards; transform-origin:center; }
+.radar-dot { animation:scaleIn .4s ease backwards; }
+
+/* Hover en filas de tabla */
+.tbl tbody tr { transition:background .15s; }
+
+/* Transición suave entre pantallas */
+.screen.active { animation:fadeIn .35s ease; }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 </style>
 </head>
 <body>
@@ -468,6 +528,41 @@ body {
         </div>
         <div class="g2">
           <div class="card"><div class="ct">🔬 5 Dimensiones CASEL</div>
+            <div style="display:flex;justify-content:center;margin-bottom:8px;">
+              <svg width="240" height="210" viewBox="0 0 240 210">
+                <!-- malla de fondo: 4 anillos pentagonales -->
+                <g fill="none" stroke="#E0E0E0" stroke-width="1">
+                  <polygon points="120,30 207,93 174,196 66,196 33,93"/>
+                  <polygon points="120,52 187,100 162,178 78,178 53,100"/>
+                  <polygon points="120,74 167,107 150,160 90,160 73,107"/>
+                  <polygon points="120,96 147,114 138,142 102,142 93,114"/>
+                </g>
+                <!-- ejes -->
+                <g stroke="#E0E0E0" stroke-width="1">
+                  <line x1="120" y1="118" x2="120" y2="30"/>
+                  <line x1="120" y1="118" x2="207" y2="93"/>
+                  <line x1="120" y1="118" x2="174" y2="196"/>
+                  <line x1="120" y1="118" x2="66" y2="196"/>
+                  <line x1="120" y1="118" x2="33" y2="93"/>
+                </g>
+                <!-- polígono de datos: Autocon 82, Autorreg 68, HabSoc 75, Empatía 55, TomaDec 80 -->
+                <!-- valores aplicados sobre cada eje desde el centro (120,118) -->
+                <polygon class="radar-poly" points="120,46 187,99 159,167 90,162 56,97"
+                  fill="rgba(38,166,154,.25)" stroke="#26A69A" stroke-width="2.5" stroke-linejoin="round"/>
+                <!-- puntos -->
+                <circle class="radar-dot" cx="120" cy="46" r="4" fill="#26A69A" style="animation-delay:.5s"/>
+                <circle class="radar-dot" cx="187" cy="99" r="4" fill="#5C6BC0" style="animation-delay:.6s"/>
+                <circle class="radar-dot" cx="159" cy="167" r="4" fill="#AB47BC" style="animation-delay:.7s"/>
+                <circle class="radar-dot" cx="90" cy="162" r="4" fill="#FF7043" style="animation-delay:.8s"/>
+                <circle class="radar-dot" cx="56" cy="97" r="4" fill="#FFA726" style="animation-delay:.9s"/>
+                <!-- etiquetas -->
+                <text x="120" y="22" text-anchor="middle" font-size="10" font-weight="700" fill="#546E7A">Autoconc.</text>
+                <text x="214" y="92" text-anchor="start" font-size="10" font-weight="700" fill="#546E7A">Autorreg.</text>
+                <text x="178" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#546E7A">Hab. soc.</text>
+                <text x="62" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#546E7A">Empatía</text>
+                <text x="26" y="92" text-anchor="end" font-size="10" font-weight="700" fill="#546E7A">Decis.</text>
+              </svg>
+            </div>
             <div class="sdim"><div class="sdc" style="background:#26A69A"></div><div style="flex:1"><div class="sdnm">Autoconciencia</div><div class="pt" style="margin-top:3px;"><div class="pf" style="width:82%;background:linear-gradient(90deg,#26A69A,#00695C)"></div></div></div><div><div class="sdsc">82</div><div class="sdlv">Avanzado</div></div></div>
             <div class="sdim"><div class="sdc" style="background:#5C6BC0"></div><div style="flex:1"><div class="sdnm">Autorregulación</div><div class="pt" style="margin-top:3px;"><div class="pf" style="width:68%;background:linear-gradient(90deg,#5C6BC0,#3949AB)"></div></div></div><div><div class="sdsc" style="color:#5C6BC0">68</div><div class="sdlv">Intermedio</div></div></div>
             <div class="sdim"><div class="sdc" style="background:#AB47BC"></div><div style="flex:1"><div class="sdnm">Habilidades sociales</div><div class="pt" style="margin-top:3px;"><div class="pf" style="width:75%;background:linear-gradient(90deg,#AB47BC,#7B1FA2)"></div></div></div><div><div class="sdsc" style="color:#AB47BC">75</div><div class="sdlv">Avanzado</div></div></div>
@@ -493,6 +588,36 @@ body {
         </div>
         <div class="g2">
           <div class="card"><div class="ct">🧩 Mis habilidades para aprender</div>
+            <div style="display:flex;justify-content:center;margin-bottom:8px;">
+              <svg width="240" height="210" viewBox="0 0 240 210">
+                <g fill="none" stroke="#E0E0E0" stroke-width="1">
+                  <polygon points="120,30 207,93 174,196 66,196 33,93"/>
+                  <polygon points="120,52 187,100 162,178 78,178 53,100"/>
+                  <polygon points="120,74 167,107 150,160 90,160 73,107"/>
+                  <polygon points="120,96 147,114 138,142 102,142 93,114"/>
+                </g>
+                <g stroke="#E0E0E0" stroke-width="1">
+                  <line x1="120" y1="118" x2="120" y2="30"/>
+                  <line x1="120" y1="118" x2="207" y2="93"/>
+                  <line x1="120" y1="118" x2="174" y2="196"/>
+                  <line x1="120" y1="118" x2="66" y2="196"/>
+                  <line x1="120" y1="118" x2="33" y2="93"/>
+                </g>
+                <!-- Atención 81, Memoria 74, Razonamiento 86, Comprensión 69, Velocidad 62 -->
+                <polygon class="radar-poly" points="120,47 185,100 156,168 95,156 62,99"
+                  fill="rgba(142,36,170,.22)" stroke="#8E24AA" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle class="radar-dot" cx="120" cy="47" r="4" fill="#8E24AA" style="animation-delay:.5s"/>
+                <circle class="radar-dot" cx="185" cy="100" r="4" fill="#5C6BC0" style="animation-delay:.6s"/>
+                <circle class="radar-dot" cx="156" cy="168" r="4" fill="#26A69A" style="animation-delay:.7s"/>
+                <circle class="radar-dot" cx="95" cy="156" r="4" fill="#FFA726" style="animation-delay:.8s"/>
+                <circle class="radar-dot" cx="62" cy="99" r="4" fill="#FF7043" style="animation-delay:.9s"/>
+                <text x="120" y="22" text-anchor="middle" font-size="10" font-weight="700" fill="#546E7A">Atención</text>
+                <text x="214" y="92" text-anchor="start" font-size="10" font-weight="700" fill="#546E7A">Memoria</text>
+                <text x="178" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#546E7A">Razonam.</text>
+                <text x="62" y="208" text-anchor="middle" font-size="10" font-weight="700" fill="#546E7A">Compren.</text>
+                <text x="26" y="92" text-anchor="end" font-size="10" font-weight="700" fill="#546E7A">Velocid.</text>
+              </svg>
+            </div>
             <div class="sdim"><div class="sdc" style="background:#8E24AA"></div><div style="flex:1"><div class="sdnm">Atención</div><div class="pt" style="margin-top:3px;"><div class="pf" style="width:81%;background:linear-gradient(90deg,#8E24AA,#6A1B9A)"></div></div></div><div><div class="sdsc" style="color:#8E24AA">81</div><div class="sdlv">Avanzado</div></div></div>
             <div class="sdim"><div class="sdc" style="background:#5C6BC0"></div><div style="flex:1"><div class="sdnm">Memoria</div><div class="pt" style="margin-top:3px;"><div class="pf" style="width:74%;background:linear-gradient(90deg,#5C6BC0,#3949AB)"></div></div></div><div><div class="sdsc" style="color:#5C6BC0">74</div><div class="sdlv">Avanzado</div></div></div>
             <div class="sdim"><div class="sdc" style="background:#26A69A"></div><div style="flex:1"><div class="sdnm">Razonamiento lógico</div><div class="pt" style="margin-top:3px;"><div class="pf" style="width:86%;background:linear-gradient(90deg,#26A69A,#00695C)"></div></div></div><div><div class="sdsc" style="color:#26A69A">86</div><div class="sdlv">Sobresaliente</div></div></div>
@@ -519,6 +644,57 @@ body {
               <div class="arow"><div class="adot" style="background:#5C6BC0"></div><div><div class="atx">🤔 "Me costó recordar las palabras nuevas" — Inglés</div><div class="atm">Ayer, 5:42 PM</div></div></div>
               <div class="arow"><div class="adot" style="background:#26A69A"></div><div><div class="atx">💡 "Lo entendí a la segunda leída" — Español</div><div class="atm">Hace 2 días</div></div></div>
             </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:15px;"><div class="ct">📈 Cómo ha evolucionado mi forma de aprender</div>
+          <div style="font-size:12px;color:var(--g600);margin-bottom:14px;">El sistema aprende de Sofía con el tiempo: mientras más usa la plataforma, mejor entiende cómo enseñarle. Índice cognitivo de los últimos 6 meses.</div>
+          <svg width="100%" height="180" viewBox="0 0 600 180" preserveAspectRatio="none" style="overflow:visible;">
+            <!-- grid horizontal -->
+            <g stroke="#EEEEEE" stroke-width="1">
+              <line x1="40" y1="20" x2="590" y2="20"/>
+              <line x1="40" y1="60" x2="590" y2="60"/>
+              <line x1="40" y1="100" x2="590" y2="100"/>
+              <line x1="40" y1="140" x2="590" y2="140"/>
+            </g>
+            <!-- etiquetas eje Y -->
+            <g font-size="10" fill="#9E9E9E" font-weight="700">
+              <text x="32" y="24" text-anchor="end">90</text>
+              <text x="32" y="64" text-anchor="end">75</text>
+              <text x="32" y="104" text-anchor="end">60</text>
+              <text x="32" y="144" text-anchor="end">45</text>
+            </g>
+            <!-- área bajo la curva -->
+            <polygon points="70,128 174,112 278,96 382,72 486,52 578,40 578,160 70,160"
+              fill="url(#cogGrad)" opacity="0.18"/>
+            <defs><linearGradient id="cogGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8E24AA"/><stop offset="100%" stop-color="#8E24AA" stop-opacity="0"/>
+            </linearGradient></defs>
+            <!-- línea principal animada -->
+            <polyline points="70,128 174,112 278,96 382,72 486,52 578,40"
+              fill="none" stroke="#8E24AA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+              style="stroke-dasharray:700;animation:drawLine 1.8s ease forwards;"/>
+            <!-- puntos -->
+            <g>
+              <circle class="radar-dot" cx="70" cy="128" r="5" fill="#8E24AA" style="animation-delay:.3s"/>
+              <circle class="radar-dot" cx="174" cy="112" r="5" fill="#8E24AA" style="animation-delay:.5s"/>
+              <circle class="radar-dot" cx="278" cy="96" r="5" fill="#8E24AA" style="animation-delay:.7s"/>
+              <circle class="radar-dot" cx="382" cy="72" r="5" fill="#8E24AA" style="animation-delay:.9s"/>
+              <circle class="radar-dot" cx="486" cy="52" r="5" fill="#8E24AA" style="animation-delay:1.1s"/>
+              <circle class="radar-dot" cx="578" cy="40" r="6" fill="#AB47BC" stroke="white" stroke-width="2" style="animation-delay:1.3s"/>
+            </g>
+            <!-- etiquetas eje X -->
+            <g font-size="10" fill="#9E9E9E" font-weight="700" text-anchor="middle">
+              <text x="70" y="176">Ene</text>
+              <text x="174" y="176">Feb</text>
+              <text x="278" y="176">Mar</text>
+              <text x="382" y="176">Abr</text>
+              <text x="486" y="176">May</text>
+              <text x="578" y="176">Jun</text>
+            </g>
+          </svg>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px 14px;background:linear-gradient(135deg,#F3E5F5,#EDE7F6);border-radius:var(--r2);">
+            <div style="font-size:12px;font-weight:800;color:#6A1B9A;">📊 +16 puntos en 6 meses</div>
+            <div style="font-size:11px;color:var(--g600);">La IA detecta patrones y ajusta cada lección a su estilo</div>
           </div>
         </div>
       </div>
@@ -658,7 +834,9 @@ body {
       <div class="sbl">Panel</div>
       <div class="sbi on" onclick="tchTab('home',this)"><span class="sbi-ic">📊</span>Mi grupo</div>
       <div class="sbi" onclick="tchTab('sel',this)"><span class="sbi-ic">💚</span>SEL grupo<span class="sbd">3</span></div>
+      <div class="sbi" onclick="tchTab('cog',this)"><span class="sbi-ic">🧠</span>Cognitivo grupo</div>
       <div class="sbi" onclick="tchTab('ia',this)"><span class="sbi-ic">🤖</span>IA Copiloto</div>
+      <div class="sbi" onclick="tchTab('pred',this)" style="background:linear-gradient(135deg,#FFEBEE,#FFF3E0);"><span class="sbi-ic">🎯</span>Alerta Temprana<span class="sbd">1</span></div>
       <div class="sbi" onclick="tchTab('alertas',this)"><span class="sbi-ic">🔔</span>Alertas<span class="sbd">5</span></div>
       <div class="sbl" style="margin-top:8px;">Herramientas</div>
       <div class="sbi" onclick="tchTab('ia',this);setTimeout(function(){runAI('plan');},300);"><span class="sbi-ic">📅</span>Planificador</div>
@@ -667,6 +845,15 @@ body {
     <div class="main">
       <div id="tt-home" class="pg">
         <div class="hero" style="margin-bottom:16px;"><div class="hl"><h2>Buenos días, Mtra. García 👋</h2><p>3° A · 28 alumnos · 2025–2026</p></div><div class="hstats"><div class="hs"><div class="hsn">84%</div><div class="hsl">Promedio</div></div><div class="hs"><div class="hsn">5</div><div class="hsl">Riesgo</div></div><div class="hs"><div class="hsn">12</div><div class="hsl">Alertas</div></div></div></div>
+        <div onclick="tchTab('pred',document.querySelectorAll('#teacherDash .sbi')[4])" style="background:linear-gradient(135deg,#1A237E,#4527A0);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:16px;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 8px 28px rgba(69,39,160,.32);">
+          <div style="position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,112,67,.35),transparent 70%);"></div>
+          <span style="font-size:34px;position:relative;z-index:1;">🎯</span>
+          <div style="flex:1;position:relative;z-index:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><h3 style="font-size:15px;font-weight:900;color:white;">Alerta Temprana Predictiva</h3><span style="background:#FF7043;color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;">NUEVO</span></div>
+            <p style="font-size:12px;color:#C5CAE9;line-height:1.4;">El módulo clínico detectó <strong style="color:white;">1 alumno en riesgo de caída académica</strong> antes de que suceda. Toca para ver el análisis del Dr. Figueras.</p>
+          </div>
+          <span style="font-size:20px;color:white;position:relative;z-index:1;">→</span>
+        </div>
         <div class="g4">
           <div class="kpi bl"><div class="kh"><span class="ki">📚</span><svg class="ksp" viewBox="0 0 52 24"><polyline points="0,18 8,18 16,16 24,16 32,16 42,16 52,14" fill="none" stroke="#0288D1" stroke-width="2" stroke-linecap="round"/><polygon points="0,18 8,18 16,16 24,16 32,16 42,16 52,14 52,24 0,24" fill="#0288D1" fill-opacity=".1"/></svg></div><div class="kn bl">28</div><div class="klb">Alumnos</div><div class="kd up">↑ 2 esta semana</div></div>
           <div class="kpi gr"><div class="kh"><span class="ki">✅</span><svg class="ksp" viewBox="0 0 52 24"><polyline points="0,20 8,18 16,20 24,16 32,14 42,12 52,10" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/><polygon points="0,20 8,18 16,20 24,16 32,14 42,12 52,10 52,24 0,24" fill="#2E7D32" fill-opacity=".1"/></svg></div><div class="kn gr">84%</div><div class="klb">Promedio</div><div class="kd up">↑ +3%</div></div>
@@ -701,6 +888,47 @@ body {
           </div>
         </div>
       </div>
+      <div id="tt-cog" class="pg" style="display:none;">
+        <div class="hero" style="background:linear-gradient(125deg,#4A148C,#6A1B9A,#8E24AA);margin-bottom:16px;"><div class="hl"><h2>🧠 Perfil Cognitivo del Grupo 3° A</h2><p>Cómo aprende tu grupo · Metacognición · Semana 24</p></div><div class="hstats"><div class="hs"><div class="hsn">76</div><div class="hsl">Índice cog.</div></div><div class="hs"><div class="hsn">👁️</div><div class="hsl">Mayoría visual</div></div></div></div>
+        <div class="g2">
+          <div class="card"><div class="ct">🧩 Habilidades del grupo</div>
+            <div class="pr"><div class="pn" style="width:110px;">Atención</div><div class="pt"><div class="pf" style="width:78%;background:linear-gradient(90deg,#8E24AA,#6A1B9A)"></div></div><div class="pp">78</div></div>
+            <div class="pr"><div class="pn" style="width:110px;">Memoria</div><div class="pt"><div class="pf" style="width:72%;background:linear-gradient(90deg,#5C6BC0,#3949AB)"></div></div><div class="pp">72</div></div>
+            <div class="pr"><div class="pn" style="width:110px;">Razonamiento</div><div class="pt"><div class="pf" style="width:83%;background:linear-gradient(90deg,#26A69A,#00695C)"></div></div><div class="pp">83</div></div>
+            <div class="pr"><div class="pn" style="width:110px;">Comprensión</div><div class="pt"><div class="pf" style="width:64%;background:linear-gradient(90deg,#FF7043,#E53935)"></div></div><div class="pp">64</div></div>
+            <div class="pr"><div class="pn" style="width:110px;">Velocidad</div><div class="pt"><div class="pf" style="width:69%;background:linear-gradient(90deg,#FFA726,#F57C00)"></div></div><div class="pp">69</div></div>
+            <div style="margin-top:14px;padding:12px 14px;background:linear-gradient(135deg,#F3E5F5,#EDE7F6);border-radius:var(--r2);">
+              <div style="font-size:12px;font-weight:800;color:#6A1B9A;margin-bottom:3px;">💪 Fortaleza del grupo: Razonamiento lógico (83)</div>
+              <div style="font-size:11px;color:var(--g600);">Aprovecha proyectos de resolución de problemas. ⚠️ Refuerza comprensión lectora (64), el área más baja.</div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:13px;"><div class="ct">🎨 Estilos de aprendizaje del grupo</div>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <svg width="120" height="120" viewBox="0 0 120 120" style="flex-shrink:0;">
+                  <!-- dona: Visual 50%, Auditivo 25%, Kinestésico 25% -->
+                  <circle cx="60" cy="60" r="46" fill="none" stroke="#8E24AA" stroke-width="20" stroke-dasharray="144 145" transform="rotate(-90 60 60)"/>
+                  <circle cx="60" cy="60" r="46" fill="none" stroke="#5C6BC0" stroke-width="20" stroke-dasharray="72 217" stroke-dashoffset="-144" transform="rotate(-90 60 60)"/>
+                  <circle cx="60" cy="60" r="46" fill="none" stroke="#FFA726" stroke-width="20" stroke-dasharray="72 217" stroke-dashoffset="-216" transform="rotate(-90 60 60)"/>
+                  <text x="60" y="58" text-anchor="middle" font-size="20" font-weight="900" fill="#6A1B9A">28</text>
+                  <text x="60" y="74" text-anchor="middle" font-size="9" font-weight="700" fill="#9E9E9E">alumnos</text>
+                </svg>
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;"><div style="width:11px;height:11px;border-radius:3px;background:#8E24AA;"></div><span style="font-size:12px;font-weight:800;color:var(--navy);">👁️ Visual — 14 alumnos</span></div>
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;"><div style="width:11px;height:11px;border-radius:3px;background:#5C6BC0;"></div><span style="font-size:12px;font-weight:800;color:var(--navy);">👂 Auditivo — 7 alumnos</span></div>
+                  <div style="display:flex;align-items:center;gap:7px;"><div style="width:11px;height:11px;border-radius:3px;background:#FFA726;"></div><span style="font-size:12px;font-weight:800;color:var(--navy);">✋ Kinestésico — 7 alumnos</span></div>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--g600);padding-top:10px;border-top:1px solid var(--g100);">La mitad del grupo aprende mejor con apoyos visuales. La IA prioriza diagramas y videos en las lecciones automáticamente.</div>
+            </div>
+            <div class="card"><div class="ct">💡 Recomendaciones del copiloto</div>
+              <div class="ali inf" style="border-color:#8E24AA;background:#F3E5F5;"><div class="ali-ic">📊</div><div class="ali-tx"><div class="alt">Usa más material visual</div><div class="ald">14 de 28 son visuales. Diagramas y mapas mentales suben la retención del grupo.</div></div></div>
+              <div class="ali md"><div class="ali-ic">📖</div><div class="ali-tx"><div class="alt">Refuerza comprensión lectora</div><div class="ald">Es la habilidad más baja (64). Sugiero lectura guiada 2 veces por semana.</div></div></div>
+              <div class="ali inf"><div class="ali-ic">⚡</div><div class="ali-tx"><div class="alt">3 alumnos necesitan más tiempo</div><div class="ald">Velocidad de procesamiento baja. Dales exámenes sin presión de reloj.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="tt-ia" class="pg" style="display:none;">
         <div class="aib"><div class="aiic">🤖</div><div><h3>IA Copiloto del Maestro</h3><p>Tu asistente pedagógico: planifica, evalúa, interviene y comunica — en segundos, alineado al currículo SEP.</p></div>
         </div>
@@ -724,7 +952,19 @@ body {
             </div>
           </div>
         </div>
-        <div class="card" id="aiBox"><div class="ct">🤖 Copiloto IA</div><div style="color:var(--g400);font-size:13px;">Selecciona una herramienta arriba para ver al copiloto en acción...</div></div>
+        <div class="card" id="aiBox"><div class="ct">🤖 Copiloto IA · pregúntale lo que sea</div>
+          <div class="ai-input-row" style="margin-top:0;">
+            <input class="ai-input" id="aiInput" placeholder="Ej: ¿qué alumnos necesitan apoyo?" onkeydown="if(event.key==='Enter')sendAI()">
+            <button class="ai-send" onclick="sendAI()">Enviar</button>
+          </div>
+          <div class="ai-suggest">
+            <button class="ai-sug-chip" onclick="askAI('¿Qué alumnos necesitan más apoyo esta semana?')">¿Quién necesita apoyo?</button>
+            <button class="ai-sug-chip" onclick="askAI('Dame ideas para motivar a Carlos')">Motivar a Carlos</button>
+            <button class="ai-sug-chip" onclick="askAI('Resume el avance del grupo')">Resumen del grupo</button>
+            <button class="ai-sug-chip" onclick="askAI('Ideas para reforzar Inglés')">Reforzar Inglés</button>
+          </div>
+          <div id="aiBody" style="color:var(--g400);font-size:13px;margin-top:14px;">Escribe arriba o toca una herramienta — el copiloto responde al instante, con acceso al perfil académico y SEL de tus 28 alumnos.</div>
+        </div>
       </div>
       <div id="tt-alertas" class="pg" style="display:none;">
         <div class="stl">🔔 Alertas</div>
@@ -734,6 +974,68 @@ body {
           <div class="ali md"><div class="ali-ic">🌍</div><div class="ali-tx"><div class="alt">Luis M. — 3 intentos fallidos Inglés</div><div class="ald">Reprobó "Past Tense" tres veces.</div></div><div class="altm">Ayer</div></div>
           <div class="ali md"><div class="ali-ic">📖</div><div class="ali-tx"><div class="alt">Grupo — Comprensión lectora baja</div><div class="ald">40% del grupo bajo el umbral en Español.</div></div><div class="altm">Hace 2 días</div></div>
           <div class="ali inf"><div class="ali-ic">🏆</div><div class="ali-tx"><div class="alt">Torneo inter-escuelas próxima semana</div><div class="ald">Lomas vs. BrightMinds · Matemáticas · Vie 13.</div></div><div class="altm">Pendiente</div></div>
+        </div>
+      </div>
+      <div id="tt-pred" class="pg" style="display:none;">
+        <div class="hero" style="background:linear-gradient(125deg,#1A237E,#311B92,#4527A0);margin-bottom:16px;"><div class="hl"><h2>🎯 Alerta Temprana Predictiva</h2><p>El motor que conecta bienestar emocional con rendimiento — único en el mercado</p></div></div>
+
+        <div style="background:linear-gradient(135deg,#E8EAF6,#EDE7F6);border-radius:var(--r);padding:15px 18px;margin-bottom:16px;display:flex;align-items:center;gap:13px;border-left:5px solid #5C6BC0;">
+          <span style="font-size:30px;">🩺</span>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:900;color:var(--navy);margin-bottom:2px;">Análisis supervisado por el Dr. Nicolás Figueras</div>
+            <div style="font-size:12px;color:var(--g600);">Médico responsable de la metodología SEL · Cédula profesional · Revisión clínica semanal</div>
+          </div>
+          <span style="background:#5C6BC0;color:white;font-size:10px;font-weight:800;padding:4px 11px;border-radius:20px;white-space:nowrap;">✓ Avalado</span>
+        </div>
+
+        <div class="card" style="margin-bottom:15px;border:2px solid #FF7043;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="font-size:26px;">👦</span>
+            <div style="flex:1;"><div style="font-size:16px;font-weight:900;color:var(--navy);">Carlos Vega — Predicción de riesgo académico</div><div style="font-size:12px;color:var(--coral);font-weight:700;">⚠️ El sistema anticipó esta caída 2 semanas antes</div></div>
+          </div>
+          <div style="font-size:13px;color:var(--g700);line-height:1.6;margin-bottom:16px;background:#FFF5F3;border-radius:var(--r2);padding:13px 15px;">
+            <strong>Lo que detectó el módulo clínico:</strong> El bienestar socioemocional de Carlos empezó a bajar a inicios de mayo. Históricamente, una caída sostenida en SEL <strong>precede</strong> a la caída académica. El sistema lo marcó como riesgo <strong>antes</strong> de que sus calificaciones bajaran — dando tiempo de intervenir.
+          </div>
+          <!-- Gráfica de doble línea: SEL cae primero, académico después -->
+          <div style="font-size:12px;font-weight:800;color:var(--g600);margin-bottom:8px;">📉 SEL (verde) vs. Promedio académico (naranja) — últimos 5 meses</div>
+          <svg width="100%" height="200" viewBox="0 0 600 200" preserveAspectRatio="none" style="overflow:visible;">
+            <g stroke="#EEEEEE" stroke-width="1">
+              <line x1="40" y1="30" x2="590" y2="30"/><line x1="40" y1="75" x2="590" y2="75"/><line x1="40" y1="120" x2="590" y2="120"/><line x1="40" y1="165" x2="590" y2="165"/>
+            </g>
+            <g font-size="10" fill="#9E9E9E" font-weight="700"><text x="32" y="34" text-anchor="end">90</text><text x="32" y="79" text-anchor="end">70</text><text x="32" y="124" text-anchor="end">50</text><text x="32" y="169" text-anchor="end">30</text></g>
+            <!-- zona de alerta (donde SEL ya cayó pero académico aún no) -->
+            <rect x="320" y="20" width="150" height="160" fill="#FFA726" opacity="0.08"/>
+            <text x="395" y="44" text-anchor="middle" font-size="10" font-weight="800" fill="#E65100">⚠️ Ventana de</text>
+            <text x="395" y="57" text-anchor="middle" font-size="10" font-weight="800" fill="#E65100">intervención</text>
+            <!-- línea SEL (cae primero) -->
+            <polyline points="70,52 175,60 290,95 405,128 530,150" fill="none" stroke="#26A69A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:700;animation:drawLine 1.6s ease forwards;"/>
+            <!-- línea académica (cae después, con retraso) -->
+            <polyline points="70,46 175,48 290,52 405,72 530,138" fill="none" stroke="#FF7043" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" style="animation:drawLine 1.6s ease .4s backwards;"/>
+            <!-- puntos clave -->
+            <circle class="radar-dot" cx="290" cy="95" r="5" fill="#26A69A" style="animation-delay:.9s"/>
+            <circle class="radar-dot" cx="405" cy="72" r="5" fill="#FF7043" style="animation-delay:1.3s"/>
+            <g font-size="10" fill="#9E9E9E" font-weight="700" text-anchor="middle"><text x="70" y="188">Feb</text><text x="175" y="188">Mar</text><text x="290" y="188">Abr</text><text x="405" y="188">May</text><text x="530" y="188">Jun</text></g>
+          </svg>
+          <div style="display:flex;gap:16px;justify-content:center;margin-top:6px;">
+            <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:3px;background:#26A69A;border-radius:2px;"></div><span style="font-size:11px;color:var(--g600);font-weight:700;">Bienestar SEL</span></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:3px;background:#FF7043;border-radius:2px;"></div><span style="font-size:11px;color:var(--g600);font-weight:700;">Promedio académico</span></div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="card"><div class="ct">🧠 Por qué funciona</div>
+            <div style="font-size:13px;color:var(--g700);line-height:1.6;">Cuando un niño está mal emocionalmente, <strong>primero</strong> se desconecta, pierde motivación y deja de participar. Las calificaciones bajan <strong>después</strong>, cuando el problema ya creció.<br><br>Al medir el bienestar SEL de forma clínica y continua, BrightMinds ve la señal temprana que ningún examen detecta — y avisa con semanas de anticipación.</div>
+          </div>
+          <div class="card" style="background:linear-gradient(135deg,#E8F5E9,#E0F2F1);"><div class="ct">✅ Acción recomendada</div>
+            <div style="font-size:13px;color:var(--g700);line-height:1.7;">
+              1. Intervención SEL inmediata (plan del Dr. Figueras)<br>
+              2. Contacto con padres esta semana<br>
+              3. Metas académicas reducidas temporalmente<br>
+              4. Seguimiento diario en el dashboard<br><br>
+              <strong style="color:#00695C;">Si se interviene ahora, la caída académica puede evitarse por completo.</strong>
+            </div>
+            <button onclick="tchTab('ia',document.querySelectorAll('#teacherDash .sbi')[3]);setTimeout(function(){askAI('Dame ideas para motivar a Carlos');},250);" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#00695C,#26A69A);color:white;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;">🤖 Pedir plan al copiloto IA</button>
+          </div>
         </div>
       </div>
     </div>
@@ -897,6 +1199,28 @@ function goTo(id){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  animateNumbers(id);
+}
+
+// Cuenta los KPIs de 0 a su valor
+function animateNumbers(scopeId){
+  setTimeout(function(){
+    var scope=document.getElementById(scopeId);
+    if(!scope) return;
+    var nums=scope.querySelectorAll('.kn');
+    nums.forEach(function(el){
+      var raw=el.textContent.trim();
+      var m=raw.match(/^(\d+)(%?)$/);
+      if(!m) return;
+      var target=parseInt(m[1],10), suffix=m[2], cur=0;
+      var steps=28, inc=target/steps, n=0;
+      var iv=setInterval(function(){
+        n++; cur+=inc;
+        if(n>=steps){ cur=target; clearInterval(iv); }
+        el.textContent=Math.round(cur)+suffix;
+      },22);
+    });
+  },120);
 }
 function goBack(){goTo(prev);}
 
@@ -912,7 +1236,7 @@ function stuTab(t,el){
   if(el)el.classList.add('on'); window.scrollTo(0,0);
 }
 function tchTab(t,el){
-  ['home','sel','ia','alertas'].forEach(function(x){var d=document.getElementById('tt-'+x);if(d)d.style.display=(x===t)?'block':'none';});
+  ['home','sel','cog','pred','ia','alertas'].forEach(function(x){var d=document.getElementById('tt-'+x);if(d)d.style.display=(x===t)?'block':'none';});
   document.querySelectorAll('#teacherDash .sbi').forEach(function(i){i.classList.remove('on');});
   if(el)el.classList.add('on'); window.scrollTo(0,0);
 }
@@ -926,10 +1250,55 @@ var aiT={
   report:'<strong>📊 Reporte semanal para padres — 3°A · Semana 24</strong><br><br>Estimados padres de familia,<br><br>Esta semana el grupo 3°A tuvo un desempeño general de <strong>84%</strong>, mejorando 3 puntos respecto a la semana anterior. El índice de bienestar socioemocional (SEL) grupal subió a <strong>71 puntos</strong>.<br><br><strong>Logros:</strong> 6 alumnos alcanzaron racha de 10+ días · El grupo ganó el reto semanal de Matemáticas<br><br><strong>Área de oportunidad grupal:</strong> Inglés (tiempos verbales). Recomendamos 10 min diarios de práctica en casa con las actividades del portal.<br><br><strong>Próxima semana:</strong> 🏆 Torneo inter-escuelas de Matemáticas — ¡échenles porras!<br><br>Gracias por su acompañamiento — Mtra. García<br><br><em>✉️ Listo para enviar a las 28 familias con un clic.</em>',
   feedback:'<strong>✍️ Retroalimentación individual — generada para cada alumno</strong><br><br>Ejemplo para <strong>Sofía García</strong>:<br><br>"¡Excelente semana, Sofía! 🎉 Tu racha de 12 días demuestra tu constancia. En Matemáticas dominas las multiplicaciones — estás lista para el siguiente nivel. En Inglés, los tiempos verbales aún se te complican un poco: te recomiendo el juego de Past Tense 15 min al día. Tu autoconciencia emocional subió 8 puntos — el Dr. Figueras está muy contento con tu progreso en el termómetro emocional. Sigue así. — Mtra. García"<br><br>✅ Tono adaptado a la edad · Balance entre reconocimiento y áreas de mejora · Datos académicos y SEL integrados<br><br><em>Generada para los 28 alumnos en 4 segundos. Editable antes de enviar.</em>'
 };
-function runAI(t){
-  var b=document.getElementById('aiBox');
-  b.innerHTML='<div class="ct">🤖 Generando...</div><div style="color:#9e9e9e;font-size:13px;">Un momento...</div>';
-  setTimeout(function(){b.innerHTML='<div class="ct">🤖 Copiloto</div><div class="air">'+aiT[t]+'</div>';toast('✅ IA respondió');},1100);
+// Respuestas a preguntas de texto libre (palabras clave)
+var aiFree=[
+  {k:['apoyo','ayuda','necesit','riesgo','atencion','atención'],r:'<strong>🔍 Alumnos que necesitan apoyo — Semana 24</strong><br><br>Analicé el desempeño académico y SEL de los 28 alumnos:<br><br><strong>🔴 Carlos Vega — Urgente:</strong> Promedio 48%, sin actividad 5 días, índice SEL 41 con señales de ansiedad. Recomiendo intervención inmediata + contacto con padres hoy.<br><br><strong>🟡 Luis Martínez:</strong> Empatía baja (38) y 3 intentos fallidos en Inglés. Sugiero refuerzo individual y dinámica de colaboración.<br><br><strong>🟡 Valeria Cruz:</strong> Autorregulación 44, impulsividad en 4 ejercicios. La actividad de respiración 4-7-8 del Dr. Figueras puede ayudar.'},
+  {k:['carlos','motiv'],r:'<strong>💡 Ideas para motivar a Carlos Vega</strong><br><br>Su perfil muestra ansiedad y desconexión, así que el enfoque es reconstruir confianza:<br><br>1. <strong>Metas muy pequeñas:</strong> solo 1 lección por día esta semana, para que acumule victorias.<br>2. <strong>Aprovecha su fuerte:</strong> su razonamiento lógico es bueno — empieza por retos de Matemáticas visuales donde puede brillar.<br>3. <strong>Refuerzo positivo inmediato:</strong> reconócelo en público cuando complete algo.<br>4. <strong>Actividad SEL diaria:</strong> "Regulación emocional básica" del módulo del Dr. Figueras, 10 min.<br>5. <strong>Tutor par:</strong> emparéjalo con Ana R., que tiene alto SEL y paciencia.'},
+  {k:['resum','avance','grupo','general','como va','cómo va'],r:'<strong>📊 Resumen del grupo 3°A — Semana 24</strong><br><br>El grupo va <strong>bien y mejorando</strong>:<br><br>• Promedio general: <strong>84%</strong> (+3 pts vs semana pasada)<br>• Índice SEL grupal: <strong>71</strong> (+4 pts)<br>• 6 alumnos con racha de 10+ días<br>• El grupo ganó el reto semanal de Matemáticas 🏆<br><br><strong>Fortalezas:</strong> Matemáticas (88%) y razonamiento lógico.<br><strong>A trabajar:</strong> Inglés grupal (tiempos verbales) y empatía (58, la dimensión SEL más baja).<br><br>5 alumnos requieren seguimiento cercano — Carlos V. es prioridad alta.'},
+  {k:['ingles','inglés','past','verbal'],r:'<strong>🌍 Plan para reforzar Inglés en el grupo</strong><br><br>El 40% del grupo está bajo el umbral en tiempos verbales. Propongo:<br><br>1. <strong>Juego colaborativo de Past Tense</strong> 3 veces por semana, 15 min.<br>2. <strong>Equipos balanceados</strong> mezclando alumnos fuertes y en refuerzo.<br>3. <strong>Refuerzo individual</strong> para Luis M. (3 intentos fallidos).<br>4. <strong>Tarea gamificada</strong> de 10 min diarios con audio de pronunciación, enviada al portal de padres.'},
+  {k:['examen','evalua','prueba','test'],r:aiT.exam},
+  {k:['plan','semana','clase'],r:aiT.plan},
+  {k:['padre','familia','reporte','comunica'],r:aiT.report},
+  {k:['sel','emocion','bienestar','socioemocional'],r:'<strong>💚 Estado socioemocional del grupo</strong><br><br>Índice SEL grupal: <strong>71/100</strong> (+4 esta semana). Análisis por dimensión CASEL:<br><br>• Autoconciencia: 76 ✅<br>• Toma de decisiones: 74 ✅<br>• Habilidades sociales: 71 ✅<br>• Autorregulación: 62 ⚠️<br>• <strong>Empatía: 58</strong> — la más baja, foco de la semana<br><br>El Dr. Figueras recomienda la dinámica "Caminando en sus zapatos" para empatía, priorizando a Luis M. y Valeria C. Carlos V. requiere atención clínica individual.'},
+];
+function aiAnswer(q){
+  q=(q||'').toLowerCase();
+  for(var i=0;i<aiFree.length;i++){
+    for(var j=0;j<aiFree[i].k.length;j++){
+      if(q.indexOf(aiFree[i].k[j])>=0) return aiFree[i].r;
+    }
+  }
+  return '<strong>🤖 Copiloto BrightMinds</strong><br><br>Puedo ayudarte con la planeación, evaluación e intervención de tu grupo. Tengo acceso al desempeño académico y al perfil SEL clínico de tus 28 alumnos.<br><br>Prueba pidiéndome:<br>• "¿Qué alumnos necesitan apoyo?"<br>• "Genera un examen de Matemáticas"<br>• "Dame un plan de intervención para Carlos"<br>• "Resume el avance del grupo"<br>• "Ideas para reforzar Inglés"';
+}
+
+// Render con animación de "escribiendo" y aparición progresiva
+function aiRender(html){
+  var body=document.getElementById('aiBody');
+  var box=document.getElementById('aiBox');
+  // quitar sugerencias e input mientras "piensa"
+  body.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  body.style.color='var(--g700)';
+  setTimeout(function(){
+    body.innerHTML='<div class="air" id="aiAir"></div>';
+    var target=document.getElementById('aiAir');
+    // aparición progresiva por fragmentos (rápida pero visible)
+    var i=0, step=Math.max(4,Math.floor(html.length/60));
+    target.classList.add('ai-cursor');
+    var iv=setInterval(function(){
+      i+=step;
+      target.innerHTML=html.slice(0,i);
+      box.scrollIntoView({block:'nearest'});
+      if(i>=html.length){ clearInterval(iv); target.innerHTML=html; target.classList.remove('ai-cursor'); }
+    },20);
+  },900);
+}
+function runAI(t){ document.getElementById('aiInput').value=''; aiRender(aiT[t]); toast('✨ Copiloto trabajando...'); }
+function askAI(q){ document.getElementById('aiInput').value=q; aiRender(aiAnswer(q)); }
+function sendAI(){
+  var inp=document.getElementById('aiInput');
+  var q=inp.value.trim();
+  if(!q){ return; }
+  aiRender(aiAnswer(q));
 }
 var courses={
   'Español':{desc:'Sinónimos (similar) y antónimos (opuesto). ¡Gana 60 XP!',q:'¿Cuál es el antónimo de "FRÍO"?',opts:[{t:'Helado',c:false},{t:'Caliente',c:true},{t:'Tibio',c:false},{t:'Fresco',c:false}]},
